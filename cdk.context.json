@@ -1,0 +1,67 @@
+{
+  "availability-zones:account=851725441401:region=us-east-1": [
+    "us-east-1a",
+    "us-east-1b",
+    "us-east-1c",
+    "us-east-1d",
+    "us-east-1e",
+    "us-east-1f"
+  ],
+  "ssm:account=851725441401:parameterName=/VpcProvider/VPCID:region=us-east-1": "vpc-0657e5e5d959c3c67",
+  "vpc-provider:account=851725441401:filter.vpc-id=vpc-0657e5e5d959c3c67:region=us-east-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0657e5e5d959c3c67",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "ownerAccountId": "851725441401",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Private",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-043f5f9f676ea99ac",
+            "cidr": "10.0.96.0/19",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-0676f69f56c3b7d49"
+          },
+          {
+            "subnetId": "subnet-0908240a7660c93ad",
+            "cidr": "10.0.128.0/19",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-0e82d5ddbe1d28d1c"
+          },
+          {
+            "subnetId": "subnet-0875857c256d1915a",
+            "cidr": "10.0.160.0/19",
+            "availabilityZone": "us-east-1c",
+            "routeTableId": "rtb-086b95caba161932c"
+          }
+        ]
+      },
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0f432aa801c210dfd",
+            "cidr": "10.0.0.0/19",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-0d441ffe9fa75c338"
+          },
+          {
+            "subnetId": "subnet-001f0202a2141feea",
+            "cidr": "10.0.32.0/19",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-0c996ed1dae8ff0c8"
+          },
+          {
+            "subnetId": "subnet-0d655d30959f0501e",
+            "cidr": "10.0.64.0/19",
+            "availabilityZone": "us-east-1c",
+            "routeTableId": "rtb-09238c0de40e6c587"
+          }
+        ]
+      }
+    ]
+  }
+}
