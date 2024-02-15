@@ -10,10 +10,9 @@ Development and testing took longer then I expected. Testing itself takes a whil
 
 If Wordpress could of been written in JS, and using  React/NextJS or Angular. the architecture would of been much faster to build, since I could of taken advantage of building a static website running "npm run build", and using a CI/CD Pipeline to upload the static files to an AWS S3 Bucket and used Cloudfront to access it.
 
-The application was PHP. There is a plugin to turn it into a static website, however, this would require the plugin (Simple Static) to run within a Docker container and could not investigate this quickly enough. Running Simpe static within a local docker container was taking long enough (at least 30 mins - that's too long for a build - just to generate static files)
+The application was PHP. There is a plugin to turn it into a static website, however, this would require the plugin (Simply Static) to run within a Docker container and could not investigate this quickly enough. Running Simply static within a local docker container was taking long enough (at least 30 mins - that's too long for a build - just to generate static files)
 
 The archtecture that I went for was a Fargate architecture inside of a VPC geared for a green/blue deployment using CI/CD Pipleline
-
 
 
 # The stacks I've build so far.
