@@ -15,7 +15,7 @@ The application was PHP. There is a plugin to turn it into a static website, how
 The archtecture that I went for was a Fargate architecture inside of a VPC geared for a green/blue deployment using CI/CD Pipleline
 
 
-# The stacks I've build so far.
+# The stacks I've build for infastructture
 
 ## HostZoneCdkStack
 This stack builds HostZone and certification for the domain name (in this case - tc-testing.xyz)
