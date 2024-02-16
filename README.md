@@ -17,6 +17,9 @@ The archtecture that I went for was a Fargate architecture inside of a VPC geare
 
 # The stacks I've build so far.
 
+## HostZoneCdkStack
+This stack builds HostZone and certification for the domain name (in this case - tc-testing.xyz)
+
 ## VPCStack
 This stack builds the VPC for the Fargate docker container - VPC ID is stored in SSM paramated since it's not possible to read an output of it for other stacks. 
 
@@ -26,35 +29,30 @@ The VPCStack is currently configured in a way which generates the public and pri
 This stack builds the ECS Cluster and Security Group. Both Cluster Name and Security Group Id are placed as Outputs
 
 ## ECSServiceStack
-This stack builds the ECS Service, as well as Task Definition and adds the container for what wordpress with  WooCommerce plugin will reside on. Still need work on the Target Groups, and port forwarding
+This stack builds the ECS Service, as well as Task Definition and adds the container for what wordpress with  WooCommerce plugin will reside on.
 
 # MySQLStack
 This stack builds a MySQL instance in the RDS Service. It's a very basic configuration. Need more time to flesh it out more.
 
-# Other needs that need to be done
+## ECRStack
 
-# Cloudfront stack. 
+A ECR Repository needed to store docker images built during the CI/CD Pipeline process
 
-A cloudfront stack would be needed to display the Woo Commerce site to the world. It would be the CDN to make the site accessible in a quick efficent manner
+## DNSFrontStack
 
-# ECR Stack
-
-A ECR Repository would be needed for container the docker images being built inside of the CI/CD Pipeline process
-
-# Cloudfront stack. 
-
-A cloudfront stack would be needed to display the Woo Commerce site to the world. It would be the CDN to make the site accessible in a quick efficent manner
+A stack that creates the dns records for the wordpress woocommerce site. The DNS record is an alias to the Cloudfront distribution also created in this stack. The CloudFront Distribution links to the Application load balancer used for the green blue deployment
 
 
+## MediaStack. 
 
-# S3 stack. 
-
-A S3 bucket stack to host asssets for wordpress.
+A S3 bucket stack to host asssets for wordpress, access through the CloudFront distribution also setup for it.
 
 
 # CI/CD Pipeline
 
-For this infastructure, the folowing CI/CD Pipeline would of been needed.
+## CICDCdkStack
+
+For this infastructure, the folowing CI/CD Pipeline is needed
 
 ## Source 
 
@@ -74,8 +72,11 @@ If everything is going well so far, we approval it so that we can see our change
 
 ## Deploy to Staging
 
+This would deploy using ECS Deploy. Ran out of time to build this properly.
+
 This would be the blue environment. Testing out the blue environment to make sure everything working as expected.
 
 ## Deploy to Production
 
 Once things are checked and good to go, make the switch, and make the latest container go live on production.
+

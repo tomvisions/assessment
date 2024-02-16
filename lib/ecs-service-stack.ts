@@ -15,7 +15,7 @@ declare const elbAlarm: cw.Alarm;
 let clusterName  = cdk.Fn.importValue('clusterName')
 let securityGroupId  = cdk.Fn.importValue('securityGroupId')
 
-
+const servicePort = 8080;
 
 export class ECSServiceStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -36,61 +36,38 @@ export class ECSServiceStack extends Stack {
         const TaskDefinition = new ecs.FargateTaskDefinition(this, 'blue-task-definition');
 
         TaskDefinition.addContainer('BlueTaskDefinition', {
-            image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
+            image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample:latest"),
             memoryLimitMiB: 512,
-            containerName: 'BlueContainerName',
-            portMappings: [{ containerPort: 80 }]
+            containerName: 'ContainerName',
+            portMappings: [{ containerPort: 80 }],
+            command: ["/bin/bash", "-c", "echo \"OK\" > /var/www/html/ok.html; apachectl -D FOREGROUND"],
+            healthCheck: { command :[ "CMD-SHELL", "curl -f http://localhost/ok.html || exit 1" ]}
         });
 
 
-        const service = new aws_ecs_patterns.ApplicationLoadBalancedFargateService(this, "blue-service", {
+        const serviceBlue = new aws_ecs_patterns.ApplicationLoadBalancedFargateService(this, "blue-service", {
             taskDefinition: TaskDefinition,
             cluster: cluster, // Required
-            desiredCount: 1, // Default is 1
+            desiredCount: 2, // Default is 1
             cpu: 512, // Default is 256
+            listenerPort: 8080,
             memoryLimitMiB: 2048,
-            //   loadBalancer: lbBlue,
-            /*           cluster: cluster, // Required
-                       cpu: 512, // Default is 256
-                       desiredCount: 1, // Default is 1
-                       taskDefinition: taskDefinitionBlue,
-                       serviceName: 'blue-service',
-                   //    taskImageOptions: { image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample") },
-                       memoryLimitMiB: 2048, // Default is 512
-                       publicLoadBalancer: true, // Default is true
-                       deploymentController: {
-                           type: ecs.DeploymentControllerType.EXTERNAL
-                       },
-                       listenerPort: 80 */
         });
 
-        const scaling = service.service.autoScaleTaskCount({ maxCapacity: 2 });
-        scaling.scaleOnCpuUtilization('CpuScaling', {
-          targetUtilizationPercent: 50,
-          scaleInCooldown: cdk.Duration.seconds(60),
-          scaleOutCooldown: cdk.Duration.seconds(60)
-        });
+        const serviceGreen = new aws_ecs_patterns.ApplicationLoadBalancedFargateService(this, "green-service", {
+          taskDefinition: TaskDefinition,
+          cluster: cluster, // Required
+          desiredCount: 2, // Default is 1
+          cpu: 512, // Default is 256
+          memoryLimitMiB: 2048,
+          listenerPort: 8888,
+      });
 
-
-       // new elbv2.ApplicationTargetGroup(this, 'asdfasfa', {
-
-       // }) 
-       // service.targetGroup.addTarget()
-      /*  const targetGroup = new elbv2.ApplicationTargetGroup(this, "TargetGroup", {
-            targets: [service],
-            protocol: elbv2.ApplicationProtocol.HTTP,
-            vpc: props.vpc,
-            port: 80,
-            deregistrationDelay: cdk.Duration.seconds(30),
-            healthCheck: {
-              path: "/",
-              healthyThresholdCount: 2,
-              unhealthyThresholdCount: 3,
-              interval: cdk.Duration.seconds(10),
-              timeout: cdk.Duration.seconds(5),
-              healthyHttpCodes: "200",
-            },
-          }); */
+      new CfnOutput(this, 'serviceBlueName', { value: serviceBlue.service.serviceName, exportName: "serviceBlueName" });
+      new CfnOutput(this, 'serviceBlueArn', { value: serviceBlue.service.serviceArn, exportName: "serviceBlueArn" })
+      new CfnOutput(this, 'loadBalancerArn', { value: serviceBlue.loadBalancer.loadBalancerArn, exportName: "loadBalancerArn" })
+      new CfnOutput(this, 'loadBalancerDNSName', { value: serviceBlue.loadBalancer.loadBalancerDnsName, exportName: "loadBalancerDNSNAme" })
+      
     }
 }
 
